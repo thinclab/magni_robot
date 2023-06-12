@@ -35,7 +35,7 @@
       <geometry>
         <mesh filename="package://magni_description/meshes/magni_body.dae" />
       </geometry>
-    </visual>
+    </visual> 
 	<visual>
       <origin xyz="${-wheel_xpos-0.169} 0.17 ${-wheel_r+0.09}" rpy="0 0 ${pi}" />
       <geometry>
@@ -179,6 +179,7 @@
     </joint>
   </xacro:macro>
 
+
   <xacro:wheel prefix="left" reflect="1"/>
   <xacro:wheel prefix="right" reflect="-1"/>
 
@@ -187,6 +188,12 @@
   <!-- Macro for defining caster wheels -->
   <xacro:macro name="caster_wheel" params="prefix reflect">
     <link name="${prefix}_caster_wheel">
+<!--      <visual>
+        <origin xyz="${-wheel_xpos-0.19} ${reflect*0.169} ${-wheel_r+0.04}" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://magni_description/meshes/front_wheel.dae" />
+        </geometry>
+      </visual>    -->
       <collision>
         <origin xyz="${-wheel_xpos-0.19} ${reflect*0.169} ${-wheel_r+0.04}" rpy="0 0 0" />
         <geometry>
@@ -203,6 +210,39 @@
   <xacro:caster_wheel prefix="left" reflect="1"/>
   <xacro:caster_wheel prefix="right" reflect="-1"/>
 
+
+  <xacro:macro name="foot_rest" params="prefix wheel_distance">
+    <link name="${prefix}_big_caster_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://magni_description/meshes/front_wheel.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${3*wheel_r/4} 0 0" rpy="0 0 0" />
+        <geometry>
+          <sphere radius="${wheel_r}"/>
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0.07 ${-(wheel_distance+0.40)/2} ${wheel_r+.35}" rpy="0 0 0" />
+        <geometry>
+          <box size=" 0.51 ${wheel_distance+0.40} 0.70"/>
+        </geometry>
+      </collision>      
+    </link>
+    <joint name="${prefix}_big_caster_wheel_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_big_caster_wheel"/>
+      <origin xyz="${-wheel_distance-0.31} -0.071 0" rpy="0 0 ${pi/2}"/>
+    </joint>
+    
+    
+  </xacro:macro>
+
+  <xacro:foot_rest prefix="forward" wheel_distance="0.5725"/> <!-- non-extended -->
+<!--  <xacro:foot_rest prefix="forward" wheel_distance="0.8725"/> --> <!-- extended -->
 
 
   <!-- Define all sonars, if sonars_installed set to 1 -->
